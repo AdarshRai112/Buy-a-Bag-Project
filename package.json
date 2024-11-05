@@ -1,7 +1,7 @@
 {
   "name": "buy-a-bag-project",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,6 +17,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.0",
     "multer": "^1.4.5-lts.1",
+    "nodemon": "^3.1.7",
     "path": "^0.12.7"
   }
 }
