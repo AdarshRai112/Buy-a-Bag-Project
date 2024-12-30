@@ -57,4 +57,17 @@ let loginUser= async(req,res)=>{
         res.send(err.message);
     }
 }
-module.exports={registerUser,loginUser};
+let logoutUser= async(req,res)=>{
+        try{
+            req.flash("success","Logout Successfully");
+           req.session.destroy(()=>{
+            res.clearCookie('token');
+            return res.redirect("/");
+        })
+}
+catch(err){
+    req.flash("success","");
+    req.flash("error","Logout Failed")
+}
+}
+module.exports={registerUser,loginUser,logoutUser};
