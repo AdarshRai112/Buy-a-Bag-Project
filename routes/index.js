@@ -10,13 +10,50 @@ router.get("/",(req,res)=>{
     res.render("index",{error,success,loggedin:false});
 });
 router.get("/addtocart/:id",isLoggedIn,async (req,res)=>{
-    let user = await usermodel.findOne({user: req.user.email});
-    
+    let user = await usermodel.findOne({email: req.user.email});
+    user.cart.push(req.params.id);
+    await user.save();
+    req.flash("success","Added to cart successfully");
+    res.redirect("/shop");
+})
+router.get("/removefromcart/:id",isLoggedIn,async(req,res)=>{
+    try{
+        let user = await usermodel.findOne({email: req.user.email});
+        user.cart = user.cart.filter((productid)=>productid!=req.params.id);
+        await user.save();
+        req.flash("success","Added to cart successfully");
+        res.redirect("/cart");
+    }
+    catch(err){
+        req.flash("error","Failed to remove from cart");
+        res.redirect("/cart");
+    }
+})
+// router.get("/discountedproduct",isLoggedIn,async (req,res)=>{
+//     try{
+//         let products=await productModel.find({discount:{$gt:0}});
+//         req.flash("success","Discounted Product");
+//         res.render("shop",{products:products,success});
+        
+//     }
+//     catch(err){
+//         req.flash("error","Failed to fetch discounted products");
+//         res.redirect("/shop");
+//     }
+
+// })
+router.get("/cart",isLoggedIn,async (req,res)=>{
+    let user=await usermodel
+    .findOne({email:req.user.email})
+    .populate("cart");
+    res.render("cart",{user});
 })
 router.get("/shop",isLoggedIn,async (req,res)=>{
+    let success=req.flash("success");
     const products=await productModel.find();
-    res.render("shop",{products});
+    res.render("shop",{products,success});
 })
+router
 
 
 module.exports=router;
