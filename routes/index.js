@@ -11,7 +11,7 @@ router.get("/",(req,res)=>{
 });
 router.get("/addtocart/:id",isLoggedIn,async (req,res)=>{
     let user = await usermodel.findOne({email: req.user.email});
-    user.cart.push(req.params.id);
+    user.cart.push({product:req.params.id});
     await user.save();
     req.flash("success","Added to cart successfully");
     res.redirect("/shop");
@@ -19,7 +19,7 @@ router.get("/addtocart/:id",isLoggedIn,async (req,res)=>{
 router.get("/removefromcart/:id",isLoggedIn,async(req,res)=>{
     try{
         let user = await usermodel.findOne({email: req.user.email});
-        user.cart = user.cart.filter((productid)=>productid!=req.params.id);
+        user.cart = user.cart.filter((productid)=>productid._id!=req.params.id);
         await user.save();
         req.flash("success","Added to cart successfully");
         res.redirect("/cart");
@@ -45,7 +45,7 @@ router.get("/removefromcart/:id",isLoggedIn,async(req,res)=>{
 router.get("/cart",isLoggedIn,async (req,res)=>{
     let user=await usermodel
     .findOne({email:req.user.email})
-    .populate("cart");
+    .populate("cart.product");
     res.render("cart",{user});
 })
 router.get("/shop",isLoggedIn,async (req,res)=>{
