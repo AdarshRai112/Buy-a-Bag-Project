@@ -2,8 +2,8 @@
     <div class="w-full h-screen flex items-start px-20 py-20 gap-10">
         <% var totalprice=0,discount=0; %>
         <% user.cart.forEach((item)=>{ %>
-            <%totalprice=totalprice+item.product.price %>
-            <%discount=discount+item.product.discount %>
+            <%totalprice=totalprice+item.product.price*item.quantity %>
+            <%discount=discount+item.product.discount*item.quantity %>
             <div class="w-[30%] rounded-md overflow-hidden">
                 <div class="w-full h-80 flex justify-center items-center bg-[<%= item.product.bg_color%>]">
                     <img class="h-[18rem]" src="data:image/jpeg;base64,<%=item.product.image.toString('base64') %>" alt="">
@@ -11,14 +11,14 @@
                 <div class="w-full flex justify-between px-5 py-4 bg-[<%=item.product.panelcolor %>]">
                     <h3 class="text-2xl"><%=item.product.name%></h3>
                     <div class="flex items-center gap-2">
-                        <a class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-add-line" href=""></a>
+                        <a class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-subtract-line" href="/decreasequantity/<%=item._id %>"></a>
                         <div class="px-2 py-1 rounded-md bg-white text-black"><%=item.quantity %></div>
-                        <a class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-add-line "href=""></a>
+                        <a class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-add-line "href="/increasequantity/<%=item._id %>"></a>
                     </div>
                 </div>
                 <div class="flex items-center justify-between px-5 py-3 bg-[#999]">
                     <h4 class="text-lg">Net Total</h4>
-                    <h2 class="text-lg"><%=item.product.price %></h2>    
+                    <h2 class="text-lg"><%=item.product.price*item.quantity %></h2>    
                 </div>
                 <div class="flex items-center justify-between px-5 py-3 bg-[#e7e5e4]">
                     <a class="text-red-600" href="/removefromcart/<%=item._id%>">Remove</a>

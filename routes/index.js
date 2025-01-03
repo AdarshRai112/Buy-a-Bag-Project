@@ -29,6 +29,33 @@ router.get("/removefromcart/:id",isLoggedIn,async(req,res)=>{
         res.redirect("/cart");
     }
 })
+router.get("/increasequantity/:id",isLoggedIn,async(req,res)=>{
+    try{
+        let user=await usermodel.findOne({email:req.user.email});
+        //storing item in const 
+
+        const cartitem=user.cart.find((item)=>item._id.toString()===req.params.id);
+        cartitem.quantity++;
+        await user.save();
+        res.redirect("/cart");}
+    catch(err){
+        req.flash('error',"failed to increase");
+        res.redirect("/cart");
+    }
+})
+router.get("/decreasequantity/:id",isLoggedIn,async(req,res)=>{
+    try{
+        let user=await usermodel.findOne({email:req.user.email});
+        //storing item in const 
+        const cartitem=user.cart.find((item)=>item._id.toString()===req.params.id);
+        cartitem.quantity>1?cartitem.quantity--:1;
+        await user.save();
+        res.redirect("/cart");}
+    catch(err){
+        req.flash('error',"failed to decrease");
+        res.redirect("/cart");
+    }
+})
 // router.get("/discountedproduct",isLoggedIn,async (req,res)=>{
 //     try{
 //         let products=await productModel.find({discount:{$gt:0}});
