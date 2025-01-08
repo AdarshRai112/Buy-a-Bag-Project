@@ -1,12 +1,15 @@
 const express =require('express');
 const router = express.Router();
 const ownerModel=require('../models/ownermodel');
+const productModel=require('../models/productmodel');
+
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const { generateToken } = require("../utils/generateToken");
 const isOwnerLoggedIn = require('../middlewares/isOwnerLoggedIn');
 const {loginOwner}= require("../controllers/authController");
+const productmodel = require('../models/productmodel');
 //Ye route tabhi chalega jab development phase hoga
 if(process.env.NODE_ENV==="development"){
  router.post("/create", async (req,res)=>{
@@ -36,10 +39,16 @@ if(process.env.NODE_ENV==="development"){
  });   
 }
 router.post("/login",loginOwner);
-router.get("/admin",isOwnerLoggedIn,(req,res)=>{
+router.get("/admin",isOwnerLoggedIn,async (req,res)=>{
     let success=req.flash('success');
-    res.render("admin",{success});
+    let products=await productmodel.find();
+    res.render("admin",{success,products});
 });
+router.get("/createproducts",isOwnerLoggedIn,(req,res)=>{
+    let error=req.flash("error");
+    let success=req.flash("success");
+    res.render("createproducts",{error,success});
+})
 
 
 
